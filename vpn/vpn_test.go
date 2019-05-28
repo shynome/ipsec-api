@@ -1,29 +1,29 @@
 package vpn
 
 import (
-	"fmt"
-	"sync"
 	"testing"
-	"time"
 )
 
-var x = sync.Mutex{}
-var y = 0
-
-func s() {
-	x.Lock()
-	defer x.Unlock()
-	t := <-time.After(2 * time.Second)
-	y++
-	fmt.Printf("s %v %v\n", y, t)
+func init() {
+	l2tpdCoonfigFilepath = "test-etc/ppp/chap-secrets"
+	ipsecConfigFilepath = "test-etc/ipsec.d/passwd"
 }
 
-func TestSync(t *testing.T) {
-	i := 0
-	for {
-		go s()
-		i++
-		fmt.Printf("core %v \n", i)
-		<-time.After(time.Second)
+func TestList(t *testing.T) {
+	cases := map[string]int{
+		"":      2,
+		"test1": 1,
+		"test3": 0,
 	}
+	for queryUser, expectUesrsLength := range cases {
+		users, err := List(queryUser)
+		if err != nil {
+			t.Error(err)
+		}
+		if len(users) != expectUesrsLength {
+			t.Errorf("users length except %v, get %v", expectUesrsLength, len(users))
+			t.Error(users)
+		}
+	}
+	return
 }
