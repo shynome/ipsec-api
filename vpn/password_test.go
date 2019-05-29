@@ -20,3 +20,12 @@ func TestCheckPassword(t *testing.T) {
 		}
 	}
 }
+
+func Test_ChangePassword(t *testing.T) {
+	var err error
+	if err = ChangePassword("test1", "8888888888"); err != nil {
+		t.Error(err)
+		return
+	}
+	return
+}

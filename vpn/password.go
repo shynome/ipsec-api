@@ -40,8 +40,43 @@ func encryptoPassword(pass string) (passEnc string, err error) {
 	return
 }
 
-func formatPassword(user, pass, passEnc string) (ppp, ipsec string) {
-	ppp = fmt.Sprintf(`"%v" l2tpd "%v." *`, user, pass)
+func formatUser(user, pass, passEnc string) (l2tpd, ipsec string) {
+	l2tpd = fmt.Sprintf(`"%v" l2tpd "%v" *`, user, pass)
 	ipsec = fmt.Sprintf(`%v:%v:xauth-psk`, user, passEnc)
+	return
+}
+
+func formatUserPrefix(user string) (l2tpd, ipsec string) {
+	l2tpd = fmt.Sprintf(`"%v" l2tpd`, user)
+	ipsec = fmt.Sprintf(`%v:`, user)
+	return
+}
+
+// ChangePassword of user
+func ChangePassword(user, pass string) (err error) {
+
+	exist, err := checkUserExist(user)
+	if err != nil {
+		return
+	}
+	if !exist {
+		return fmt.Errorf("用户 %v 不存在", user)
+	}
+
+	passEnc, err := encryptoPassword(pass)
+	if err != nil {
+		return
+	}
+
+	l2tpd, ipsec := formatUser(user, pass, passEnc)
+
+	mux.Lock()
+	defer mux.Unlock()
+
+	l2tpdStart, ipsecStart := formatUserPrefix(user)
+
+	replaceFile(l2tpdCoonfigFilepath, l2tpdStart, l2tpd)
+	replaceFile(ipsecConfigFilepath, ipsecStart, ipsec)
+
 	return
 }

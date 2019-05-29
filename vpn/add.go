@@ -18,7 +18,7 @@ func checkUserExist(user string) (exist bool, err error) {
 		err = fmt.Errorf("user length except 1 , but get %v", usersLen)
 		return
 	}
-	exist = false
+	exist = usersLen == 1
 	return
 }
 
@@ -42,17 +42,10 @@ func Add(user, pass string) (err error) {
 		return
 	}
 
-	ppp, ipsec := formatPassword(user, pass, passEnc)
+	l2tpd, ipsec := formatUser(user, pass, passEnc)
 
-	fmt.Print(ppp, ipsec)
+	appendFile(l2tpdCoonfigFilepath, l2tpd)
+	appendFile(ipsecConfigFilepath, ipsec)
 
 	return nil
 }
-
-// ChangePassword of user
-func ChangePassword(user, pass string) (err error) {
-	mux.Lock()
-	defer mux.Unlock()
-	return nil
-}
-
