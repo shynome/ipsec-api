@@ -12,6 +12,7 @@ func checkUserExist(user string) (exist bool, err error) {
 	}
 	usersLen := len(users)
 	if usersLen == 0 {
+		exist = false
 		return
 	}
 	if usersLen != 1 {
