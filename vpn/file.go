@@ -48,6 +48,7 @@ func backupFile(file string) (err error) {
 	return
 }
 
+// replaceContent 为空时删除对应的行
 func replaceFile(file, startLineContent, replaceContent string) (err error) {
 
 	tmpFilepath := file + `.tmp`
@@ -64,6 +65,9 @@ func replaceFile(file, startLineContent, replaceContent string) (err error) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		if strings.HasPrefix(line, startLineContent) {
+			if replaceContent == "" {
+				continue
+			}
 			line = replaceContent + "\n"
 		} else {
 			line += "\n"
