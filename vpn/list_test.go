@@ -4,11 +4,6 @@ import (
 	"testing"
 )
 
-func init() {
-	l2tpdCoonfigFilepath = "test-etc/ppp/chap-secrets"
-	ipsecConfigFilepath = "test-etc/ipsec.d/passwd"
-}
-
 func TestList(t *testing.T) {
 	cases := map[string]int{
 		"":      2,
