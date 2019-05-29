@@ -23,17 +23,19 @@ func List(queryUser string) (users []string, err error) {
 		if result[0] == "" {
 			continue
 		}
-		users = append(users, result[0])
 
-		if queryUser != "" && result[0] == queryUser {
-			return
+		user := result[0]
+
+		if queryUser != "" {
+			if result[0] == queryUser {
+				users = []string{user}
+				return
+			}
+			continue
 		}
 
-	}
+		users = append(users, user)
 
-	if queryUser != "" {
-		users = []string{}
-		return users, nil
 	}
 
 	return
