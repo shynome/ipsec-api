@@ -37,6 +37,7 @@ func encryptoPassword(pass string) (passEnc string, err error) {
 		return
 	}
 	passEnc = string(passEncBytes)
+	passEnc = strings.Replace(passEnc, "\n", "", 1)
 	return
 }
 
