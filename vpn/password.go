@@ -85,7 +85,36 @@ func ChangePassword(user, pass string) (err error) {
 
 // GetPassword of a user
 func GetPassword(user string) (password string, err error) {
-	return "", nil
+	inFile, err := os.OpenFile(l2tpdCoonfigFilepath, os.O_RDONLY, fileMode)
+	if err != nil {
+		return
+	}
+	defer inFile.Close()
+
+	scanner := bufio.NewScanner(inFile)
+	user = fmt.Sprintf(`"%v"`, user)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+		if !strings.HasPrefix(line, user) {
+			continue
+		}
+		result := strings.SplitN(line, `l2tpd "`, 2)
+		result = strings.SplitN(result[1], `"`, 2)
+		pass := result[0]
+		if len(pass) < 1 {
+			continue
+		}
+		password = pass
+		return
+	}
+
+	err = fmt.Errorf("can't found the user %v password", user[1:len(user)-1])
+
+	return
 }
 
 // GetShareSecret of ipsec

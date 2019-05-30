@@ -43,3 +43,17 @@ func Test_GetShareSecret(t *testing.T) {
 	}
 	return
 }
+
+func Test_GetPassword(t *testing.T) {
+	password, err := GetPassword("test2")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	var rightPassword = "VPN_PASSWORD2"
+	if password != rightPassword {
+		t.Errorf("can't get the right share secret, now get %v", password)
+		return
+	}
+	return
+}
