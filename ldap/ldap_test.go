@@ -2,16 +2,7 @@ package ldap
 
 import (
 	"testing"
-
-	"github.com/joho/godotenv"
 )
-
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
-	}
-}
 
 func TestLdap(t *testing.T) {
 	ld := &LDAP{}
