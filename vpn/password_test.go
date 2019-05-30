@@ -29,3 +29,17 @@ func Test_ChangePassword(t *testing.T) {
 	}
 	return
 }
+
+func Test_GetShareSecret(t *testing.T) {
+	shareSecret, err := GetShareSecret()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	var rightShareSecret = "fewfqerqrwqrqrwqrqwrwqr"
+	if shareSecret != rightShareSecret {
+		t.Errorf("can't get the right share secret, now get %v", shareSecret)
+		return
+	}
+	return
+}

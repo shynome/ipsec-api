@@ -1,10 +1,14 @@
 package vpn
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 // NotAllowedCharacters for password set
@@ -77,4 +81,40 @@ func ChangePassword(user, pass string) (err error) {
 	replaceFile(ipsecConfigFilepath, []string{ipsecStart}, ipsec)
 
 	return
+}
+
+// GetPassword of a user
+func GetPassword(user string) (password string, err error) {
+	return "", nil
+}
+
+// GetShareSecret of ipsec
+func GetShareSecret() (shareSecret string, err error) {
+	inFile, err := os.OpenFile(ipsecSecretsFilepath, os.O_RDONLY, fileMode)
+	if err != nil {
+		return
+	}
+	defer inFile.Close()
+
+	scanner := bufio.NewScanner(inFile)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+		result := strings.SplitN(line, `PSK "`, 2)
+		secret := result[1]
+		if len(secret) < 2 {
+			continue
+		}
+		shareSecret = secret[0 : len(secret)-1]
+		return
+	}
+	err = fmt.Errorf("can't found ipsec secret")
+	return
+}
+
+// GenPassword generate a password
+func GenPassword() string {
+	return uuid.New().String()
 }
