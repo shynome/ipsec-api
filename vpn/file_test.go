@@ -17,7 +17,7 @@ func Test_appendFile(t *testing.T) {
 }
 
 func Test_replaceFile(t *testing.T) {
-	err := replaceFile(testFilepath, `hello world`, "eeee")
+	err := replaceFile(testFilepath, []string{`hello world`}, "eeee")
 	if err != nil {
 		t.Error(err)
 		return

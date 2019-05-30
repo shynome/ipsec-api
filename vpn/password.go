@@ -76,8 +76,8 @@ func ChangePassword(user, pass string) (err error) {
 
 	l2tpdStart, ipsecStart := formatUserPrefix(user)
 
-	replaceFile(l2tpdCoonfigFilepath, l2tpdStart, l2tpd)
-	replaceFile(ipsecConfigFilepath, ipsecStart, ipsec)
+	replaceFile(l2tpdCoonfigFilepath, []string{l2tpdStart}, l2tpd)
+	replaceFile(ipsecConfigFilepath, []string{ipsecStart}, ipsec)
 
 	return
 }

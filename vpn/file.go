@@ -49,7 +49,7 @@ func backupFile(file string) (err error) {
 }
 
 // replaceContent 为空时删除对应的行
-func replaceFile(file, startLineContent, replaceContent string) (err error) {
+func replaceFile(file string, startLinePrefix []string, replaceContent string) (err error) {
 
 	tmpFilepath := file + `.tmp`
 
@@ -61,10 +61,19 @@ func replaceFile(file, startLineContent, replaceContent string) (err error) {
 		return
 	}
 
+	checkHasPrefix := func(line string) bool {
+		for _, prefix := range startLinePrefix {
+			if strings.HasPrefix(line, prefix) {
+				return true
+			}
+		}
+		return false
+	}
+
 	scanner := bufio.NewScanner(inFile)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if strings.HasPrefix(line, startLineContent) {
+		if checkHasPrefix(line) {
 			if replaceContent == "" {
 				continue
 			}
