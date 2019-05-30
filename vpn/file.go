@@ -5,11 +5,17 @@ import (
 	"io"
 	"os"
 	"strings"
+	"sync"
 )
 
 const fileMode = 0600
 
+var mux = sync.Mutex{}
+
 func appendFile(file, content string) (err error) {
+
+	mux.Lock()
+	defer mux.Unlock()
 
 	inFile, err := os.OpenFile(file, os.O_CREATE|os.O_APPEND, fileMode)
 	if err != nil {
@@ -50,6 +56,9 @@ func backupFile(file string) (err error) {
 
 // replaceContent 为空时删除对应的行
 func replaceFile(file string, startLinePrefix []string, replaceContent string) (err error) {
+
+	mux.Lock()
+	defer mux.Unlock()
 
 	tmpFilepath := file + `.tmp`
 

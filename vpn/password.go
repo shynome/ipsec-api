@@ -71,9 +71,6 @@ func ChangePassword(user, pass string) (err error) {
 
 	l2tpd, ipsec := formatUser(user, pass, passEnc)
 
-	mux.Lock()
-	defer mux.Unlock()
-
 	l2tpdStart, ipsecStart := formatUserPrefix(user)
 
 	replaceFile(l2tpdCoonfigFilepath, []string{l2tpdStart}, l2tpd)

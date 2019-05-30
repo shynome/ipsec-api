@@ -35,9 +35,6 @@ func Add(user, pass string) (err error) {
 		return
 	}
 
-	mux.Lock()
-	defer mux.Unlock()
-
 	passEnc, err := encryptoPassword(pass)
 	if err != nil {
 		return

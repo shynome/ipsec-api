@@ -1,11 +1,5 @@
 package vpn
 
-import (
-	"sync"
-)
-
-var mux = sync.Mutex{}
-
 var (
 	l2tpdCoonfigFilepath string
 	ipsecConfigFilepath  string
