@@ -15,15 +15,14 @@ func List(queryUser []string) (users []string, err error) {
 	}
 	defer inFile.Close()
 
-	execQuery := queryUser != nil && len(queryUser) > 0
+	execQuery := false
 	queryUserMaps := map[string]bool{}
-	if execQuery {
-		for _, user := range queryUser {
-			if user == "" {
-				continue
-			}
-			queryUserMaps[user] = true
+	for _, user := range queryUser {
+		if user == "" {
+			continue
 		}
+		queryUserMaps[user] = true
+		execQuery = true
 	}
 
 	scanner := bufio.NewScanner(inFile)
