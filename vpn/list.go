@@ -8,12 +8,23 @@ import (
 
 // List users
 // if user not empty, will return the only one user, if not exits return empty
-func List(queryUser string) (users []string, err error) {
-	inFile, err := os.Open(ipsecConfigFilepath)
+func List(queryUser []string) (users []string, err error) {
+	inFile, err := os.OpenFile(ipsecConfigFilepath, os.O_RDONLY, fileMode)
 	if err != nil {
 		return
 	}
 	defer inFile.Close()
+
+	execQuery := queryUser != nil && len(queryUser) > 0
+	queryUserMaps := map[string]bool{}
+	if execQuery {
+		for _, user := range queryUser {
+			if user == "" {
+				continue
+			}
+			queryUserMaps[user] = true
+		}
+	}
 
 	scanner := bufio.NewScanner(inFile)
 	for scanner.Scan() {
@@ -26,12 +37,15 @@ func List(queryUser string) (users []string, err error) {
 
 		user := result[0]
 
-		if queryUser != "" {
-			if result[0] == queryUser {
-				users = []string{user}
+		if execQuery {
+			findedUser := result[0]
+			if queryUserMaps[findedUser] == false {
+				continue
+			}
+			// 完成了的话就提前退出
+			if len(users) == len(queryUser) {
 				return
 			}
-			continue
 		}
 
 		users = append(users, user)

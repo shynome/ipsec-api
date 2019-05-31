@@ -11,7 +11,7 @@ func TestList(t *testing.T) {
 		"test3": 0,
 	}
 	for queryUser, expectUesrsLength := range cases {
-		users, err := List(queryUser)
+		users, err := List([]string{queryUser})
 		if err != nil {
 			t.Error(err)
 		}
