@@ -10,8 +10,8 @@ func Sync() (err error) {
 	if err = ldap.NewLDAP(ld); err != nil {
 		return
 	}
-	var ldapUsers, ipsecUsers, deleteUsers []string
-	if ipsecUsers, err = List(""); err != nil {
+	var ldapUsers, ipsecUsers, deleteUsers, addUsers []string
+	if ipsecUsers, err = List([]string{}); err != nil {
 		return
 	}
 	if ldapUsers, err = ld.GetUsers(); err != nil {
@@ -28,8 +28,19 @@ func Sync() (err error) {
 		}
 	}
 
-	if err = Remove(deleteUsers); err != nil {
+	if addUsers, err = findNotExistUsers(ldapUsers); err != nil {
 		return
+	}
+
+	if len(addUsers) != 0 {
+		if err = Add(addUsers); err != nil {
+			return
+		}
+	}
+	if len(deleteUsers) != 0 {
+		if err = Remove(deleteUsers); err != nil {
+			return
+		}
 	}
 
 	return
