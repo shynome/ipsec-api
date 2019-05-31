@@ -9,7 +9,7 @@ import (
 
 // AddHandlerParams params
 type AddHandlerParams struct {
-	users []string
+	Users []string
 }
 
 func initAddHandler() {
@@ -20,12 +20,12 @@ func initAddHandler() {
 			resp(w, nil, err)
 			return
 		}
-		if len(params.users) == 0 {
+		if len(params.Users) == 0 {
 			err = fmt.Errorf("can't add empty user list")
 			resp(w, nil, err)
 			return
 		}
-		if err = vpn.Add(params.users); err != nil {
+		if err = vpn.Add(params.Users); err != nil {
 			resp(w, nil, err)
 			return
 		}
