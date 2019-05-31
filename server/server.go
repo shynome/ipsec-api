@@ -1,11 +1,8 @@
 package server
 
 import (
-	"net/http"
-
 	"encoding/json"
-
-	"github.com/shynome/ipsec-api/vpn"
+	"net/http"
 )
 
 // APIMux export
@@ -17,38 +14,28 @@ func resp(w http.ResponseWriter, data interface{}, err error) {
 		return
 	}
 	if data == nil {
-
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+	jsondata, err := json.Marshal(data)
+	if err != nil {
+		resp(w, nil, err)
+		return
 	}
 	headers := w.Header()
 	headers["Content-Type"] = []string{"application/json"}
+	w.Write(jsondata)
+}
+
+func parseParamsFromReq(r *http.Request, v interface{}) (err error) {
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&v)
+	return
 }
 
 func init() {
-	APIMux.HandleFunc("/user/add", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("add"))
-	})
-	APIMux.HandleFunc("/user/getpassword", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("getpassword"))
-	})
-	APIMux.HandleFunc("/user/list", func(w http.ResponseWriter, r *http.Request) {
-		users, err := vpn.List("")
-		if err != nil {
-			resp(w, nil, err)
-			return
-		}
-		res, err := json.Marshal(users)
-		if err != nil {
-			resp(w, nil, err)
-			return
-		}
-		w.Write(res)
-	})
-	APIMux.HandleFunc("/user/sync", func(w http.ResponseWriter, r *http.Request) {
-		err := vpn.Sync()
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusNoContent)
-	})
+	initAddHandler()
+	initGetpasswordHandler()
+	initListHandler()
+	initSyncHandler()
 }
