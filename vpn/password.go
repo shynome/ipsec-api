@@ -41,7 +41,15 @@ func encryptoPassword(pass string) (passEnc string, err error) {
 		return
 	}
 	passEnc = string(passEncBytes)
-	passEnc = strings.Replace(passEnc, "\n", "", 1)
+	length := len(passEnc)
+	if passEnc[length-2:] == "\r\n" {
+		passEnc = passEnc[:length-2]
+		return
+	}
+	if passEnc[length-1:] == "\n" {
+		passEnc = passEnc[:length-1]
+		return
+	}
 	return
 }
 
