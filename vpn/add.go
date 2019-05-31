@@ -6,7 +6,7 @@ import (
 
 func checkUserExist(user string) (exist bool, err error) {
 	exist = true
-	users, err := List(user)
+	users, err := List([]string{user})
 	if err != nil {
 		return
 	}
@@ -23,27 +23,54 @@ func checkUserExist(user string) (exist bool, err error) {
 	return
 }
 
+func findNotExistUsers(users []string) (notExistUsers []string, err error) {
+
+	existUsers, err := List(users)
+	if err != nil {
+		return
+	}
+	existUserMaps := map[string]bool{}
+	for _, user := range existUsers {
+		existUserMaps[user] = true
+	}
+
+	for _, user := range users {
+		if existUserMaps[user] {
+			continue
+		}
+		notExistUsers = append(notExistUsers, user)
+	}
+
+	return
+}
+
 // Add vpn user
-func Add(user, pass string) (err error) {
+func Add(users []string) (err error) {
 
-	exist, err := checkUserExist(user)
+	notExistUsers, err := findNotExistUsers(users)
 	if err != nil {
 		return
 	}
-	if exist {
-		err = fmt.Errorf("user %v has exist", user)
+	if len(notExistUsers) == 0 {
+		err = fmt.Errorf("all users is exist")
 		return
 	}
 
-	passEnc, err := encryptoPassword(pass)
-	if err != nil {
-		return
+	var l2tpdUsers, ipsecUsers string
+	for _, user := range notExistUsers {
+		pass := GenPassword()
+		var passEnc string
+		passEnc, err = encryptoPassword(pass)
+		if err != nil {
+			return
+		}
+		l2tpd, ipsec := formatUser(user, pass, passEnc)
+		l2tpdUsers += l2tpd + "\n"
+		ipsecUsers += ipsec + "\n"
 	}
 
-	l2tpd, ipsec := formatUser(user, pass, passEnc)
-
-	appendFile(l2tpdCoonfigFilepath, l2tpd)
-	appendFile(ipsecConfigFilepath, ipsec)
+	appendFile(l2tpdCoonfigFilepath, l2tpdUsers[:len(l2tpdUsers)-1])
+	appendFile(ipsecConfigFilepath, ipsecUsers[:len(ipsecUsers)-1])
 
 	return nil
 }

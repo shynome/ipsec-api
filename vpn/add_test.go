@@ -5,17 +5,17 @@ import (
 )
 
 func Test_Add(t *testing.T) {
-	u := "test3"
-	if err := Add(u, "helloworld3"); err != nil {
+	users := []string{"test3", "test4"}
+	if err := Add(users); err != nil {
 		t.Error(err)
 		return
 	}
-	exist, err := checkUserExist(u)
+	notExistUsers, err := findNotExistUsers(users)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	if !exist {
+	if len(notExistUsers) != 0 {
 		t.Error("用户未添加成功")
 		return
 	}
