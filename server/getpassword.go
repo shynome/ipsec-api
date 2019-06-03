@@ -9,7 +9,7 @@ import (
 
 // GetpasswordHandlerParams params
 type GetpasswordHandlerParams struct {
-	user string
+	User string
 }
 
 func initGetpasswordHandler() {
@@ -20,12 +20,12 @@ func initGetpasswordHandler() {
 			resp(w, nil, err)
 			return
 		}
-		if params.user == "" {
+		if params.User == "" {
 			err := fmt.Errorf("required user value")
 			resp(w, nil, err)
 			return
 		}
-		password, err := vpn.GetPassword(params.user)
+		password, err := vpn.GetPassword(params.User)
 		if err != nil {
 			resp(w, nil, err)
 			return
