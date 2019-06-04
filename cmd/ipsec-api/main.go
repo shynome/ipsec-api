@@ -39,6 +39,7 @@ func main() {
 		server.APIMux.ServeHTTP(w, r)
 	})
 
+	fmt.Printf("server listen at %v", addr)
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		panic(err)
 	}

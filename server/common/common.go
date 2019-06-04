@@ -1,4 +1,4 @@
-package server
+package common
 
 import (
 	"encoding/json"
@@ -6,7 +6,8 @@ import (
 	"net/http"
 )
 
-func resp(w http.ResponseWriter, data interface{}, err error) {
+// Resp json data
+func Resp(w http.ResponseWriter, data interface{}, err error) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -17,7 +18,7 @@ func resp(w http.ResponseWriter, data interface{}, err error) {
 	}
 	jsondata, err := json.Marshal(data)
 	if err != nil {
-		resp(w, nil, err)
+		Resp(w, nil, err)
 		return
 	}
 	headers := w.Header()
@@ -25,7 +26,8 @@ func resp(w http.ResponseWriter, data interface{}, err error) {
 	w.Write(jsondata)
 }
 
-func parseParamsFromReq(r *http.Request, v interface{}) (err error) {
+// ParseParamsFromReq parse json body
+func ParseParamsFromReq(r *http.Request, v interface{}) (err error) {
 	decoder := json.NewDecoder(r.Body)
 	err = decoder.Decode(&v)
 	if err != nil {

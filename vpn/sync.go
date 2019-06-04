@@ -1,20 +1,12 @@
 package vpn
 
-import (
-	"github.com/shynome/ipsec-api/ldap"
-)
-
 // Sync delete user from ldap server
 func Sync() (err error) {
-	ld := &ldap.LDAP{}
-	if err = ldap.NewLDAP(ld); err != nil {
-		return
-	}
 	var ldapUsers, ipsecUsers, deleteUsers, addUsers []string
 	if ipsecUsers, err = List([]string{}); err != nil {
 		return
 	}
-	if ldapUsers, err = ld.GetUsers(); err != nil {
+	if ldapUsers, err = Ldap.GetUsers(); err != nil {
 		return
 	}
 	ldapUserMaps := map[string]interface{}{}
@@ -42,6 +34,6 @@ func Sync() (err error) {
 			return
 		}
 	}
-
+	
 	return
 }

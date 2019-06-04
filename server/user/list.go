@@ -1,14 +1,15 @@
-package server
+package user
 
 import (
 	"net/http"
 
+	server "github.com/shynome/ipsec-api/server/common"
 	"github.com/shynome/ipsec-api/vpn"
 )
 
 func initListHandler() {
 	APIMux.HandleFunc("/user/list", func(w http.ResponseWriter, r *http.Request) {
 		users, err := vpn.List([]string{})
-		resp(w, users, err)
+		server.Resp(w, users, err)
 	})
 }
