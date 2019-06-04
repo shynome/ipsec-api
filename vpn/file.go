@@ -8,7 +8,7 @@ import (
 	"sync"
 )
 
-const fileMode = 0600
+const fileMode = 0644
 
 var mux = sync.Mutex{}
 
