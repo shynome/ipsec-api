@@ -17,7 +17,7 @@ func appendFile(file, content string) (err error) {
 	mux.Lock()
 	defer mux.Unlock()
 
-	inFile, err := os.OpenFile(file, os.O_CREATE|os.O_APPEND, fileMode)
+	inFile, err := os.OpenFile(file, os.O_CREATE|os.O_APPEND|os.O_RDWR, fileMode)
 	if err != nil {
 		return
 	}
