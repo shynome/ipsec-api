@@ -13,4 +13,9 @@ COPY --from=Build /go/bin/ipsec-api /ipsec-api
 # LDAP_Password='LDAP_BindDN password' \
 # token='5555555555555'
 
+ENV \
+  l2tpdCoonfigFilepath='/ipsec-etc/ppp/chap-secrets' \
+  ipsecConfigFilepath='/ipsec-etc/ipsec.d/passwd' \
+  ipsecSecretsFilepath='/ipsec-etc/ipsec.secrets'
+
 CMD [ "/ipsec-api" ]
