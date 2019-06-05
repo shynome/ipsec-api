@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/shynome/ipsec-api/vpn"
 	server "github.com/shynome/ipsec-api/server/common"
+	"github.com/shynome/ipsec-api/vpn"
 )
 
 // AddHandlerParams params
