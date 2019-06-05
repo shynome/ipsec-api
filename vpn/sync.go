@@ -1,7 +1,13 @@
 package vpn
 
+// SyncUsers will 
+type SyncUsers struct {
+	Add    []string
+	Delete []string
+}
+
 // Sync delete user from ldap server
-func Sync() (err error) {
+func Sync(confirm bool) (syncUsers SyncUsers, err error) {
 	var ldapUsers, ipsecUsers, deleteUsers, addUsers []string
 	if ipsecUsers, err = List([]string{}); err != nil {
 		return
@@ -24,6 +30,15 @@ func Sync() (err error) {
 		return
 	}
 
+	syncUsers = SyncUsers{
+		Add:    addUsers,
+		Delete: deleteUsers,
+	}
+
+	if confirm == false {
+		return
+	}
+
 	if len(addUsers) != 0 {
 		if err = Add(addUsers); err != nil {
 			return
@@ -34,6 +49,6 @@ func Sync() (err error) {
 			return
 		}
 	}
-	
+
 	return
 }

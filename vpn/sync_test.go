@@ -6,8 +6,10 @@ import (
 
 func Test_Sync(t *testing.T) {
 	var err error
-	if err = Sync(); err != nil {
+	var users SyncUsers
+	if users, err = Sync(false); err != nil {
 		return
 	}
+	t.Log(users)
 	return
 }
