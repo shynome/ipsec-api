@@ -3,13 +3,24 @@ package user
 import (
 	"net/http"
 
-	"github.com/shynome/ipsec-api/vpn"
 	server "github.com/shynome/ipsec-api/server/common"
+	"github.com/shynome/ipsec-api/vpn"
 )
+
+// SyncHandlerParams params
+type SyncHandlerParams struct {
+	Confirm bool
+}
 
 func initSyncHandler() {
 	APIMux.HandleFunc("/user/sync", func(w http.ResponseWriter, r *http.Request) {
-		err := vpn.Sync()
-		server.Resp(w, nil, err)
+		var err error
+		params := &SyncHandlerParams{}
+		if err = server.ParseParamsFromReq(r, params); err != nil {
+			server.Resp(w, nil, err)
+			return
+		}
+		syncUsers, err := vpn.Sync(params.Confirm)
+		server.Resp(w, syncUsers, err)
 	})
 }
