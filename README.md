@@ -23,7 +23,7 @@ docker run --rm -ti \
 查看 ldap 服务器是否正常
 
 ```
-curl -s -H 'token: b90752bc-19db-4d12-b651-0b0cbbd8c8a0' http://192.168.102.23:7070/ldap/list
+curl -s -H 'token: 7a0cb7ac-a06a-4290-91c5-49900780f813' http://127.0.0.1:7070/ldap/list
 ```
 
 ### 接口
