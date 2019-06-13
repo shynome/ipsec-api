@@ -14,7 +14,7 @@ docker run --rm -ti \
   -e LDAP_BindDN='cn=xxx-read,ou=apps,dc=company,dc=com' \
   -e LDAP_Password='LDAP_BindDN password' \
   # token 鉴权必需
-  -e token='32345y6hy02uhh9049t43g' \
+  -e token='7a0cb7ac-a06a-4290-91c5-49900780f813' \
   # 挂载 ipsec vpn 配置文件, 以供修改
   -v /root/docker-ipsec-vpn-server-master/etc:/ipsec-etc/ \
   shynome/ipsec-api
