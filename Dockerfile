@@ -10,4 +10,9 @@ FROM alpine:3.9.4@sha256:769fddc7cc2f0a1c35abb2f91432e8beecf83916c421420e6a6da9f
 RUN apk add --no-cache ca-certificates
 COPY --from=Build /ipsec-api/cmd/ipsec-api/main /ipsec-api
 
+ENV \
+  l2tpdCoonfigFilepath=/ipsec-api/vpn/test-etc/ppp/chap-secrets \
+  ipsecConfigFilepath=/ipsec-api/vpn/test-etc/ipsec.d/passwd \
+  ipsecSecretsFilepath=/ipsec-api/vpn/test-etc/ipsec.secrets 
+
 CMD [ "/ipsec-api" ]
