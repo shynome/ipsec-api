@@ -13,17 +13,19 @@ docker run --rm -ti \
   -e LDAP_Attr='cn' \
   -e LDAP_BindDN='cn=xxx-read,ou=apps,dc=company,dc=com' \
   -e LDAP_Password='LDAP_BindDN password' \
-  # token 鉴权必需
-  -e token='7a0cb7ac-a06a-4290-91c5-49900780f813' \
-  # 挂载 ipsec vpn 配置文件, 以供修改
-  -v /root/docker-ipsec-vpn-server-master/etc:/ipsec-etc/ \
+  # token 鉴权必需, 需要自行生成
+  -e token='generate uuid by yourself' \
+  # 挂载 ipsec vpn 配置文件, PWD 是 vpn 所在的路径
+  -v "$PWD/etc/ipsec.secrets:/xxx/ipsec.secrets" \
+  -v "$PWD/etc/ppp/chap-secrets:/xxx/ppp/chap-secrets" \
+  -v "$PWD/etc/ipsec.d/passwd:/xxx/ipsec.d/passwd" \
   shynome/ipsec-api
 ```
 
 查看 ldap 服务器是否正常
 
 ```
-curl -s -H 'token: 7a0cb7ac-a06a-4290-91c5-49900780f813' http://127.0.0.1:7070/ldap/list
+curl -s -H 'token: generate uuid by yourself' http://127.0.0.1:7070/ldap/list
 ```
 
 ### 接口
