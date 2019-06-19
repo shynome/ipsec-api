@@ -32,11 +32,10 @@ func appendFile(file, content string) (err error) {
 
 }
 
-func backupFile(file string) (err error) {
+func copyFile(srcFilepath string, bakFilepath string) (err error) {
 	var bakFile, inFile *os.File
-	bakFilepath := file + `.bak`
 
-	if inFile, err = os.OpenFile(file, os.O_RDONLY, fileMode); err != nil {
+	if inFile, err = os.OpenFile(srcFilepath, os.O_RDONLY, fileMode); err != nil {
 		return
 	}
 	defer inFile.Close()
@@ -66,7 +65,7 @@ func replaceFile(file string, startLinePrefix []string, replaceContent string) (
 	if inFile, err = os.Open(file); err != nil {
 		return
 	}
-	if tmpFile, err = os.OpenFile(tmpFilepath, os.O_CREATE|os.O_RDWR, fileMode); err != nil {
+	if tmpFile, err = os.OpenFile(tmpFilepath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, fileMode); err != nil {
 		return
 	}
 
@@ -100,11 +99,12 @@ func replaceFile(file string, startLinePrefix []string, replaceContent string) (
 		return
 	}
 
-	if err = backupFile(file); err != nil {
+	if err = copyFile(file, file+".bak"); err != nil {
 		return
 	}
 
-	if err = os.Rename(tmpFilepath, file); err != nil {
+	// 将临时文件的内容一次性写到配置文件中
+	if err = copyFile(tmpFilepath, file); err != nil {
 		return
 	}
 
