@@ -42,7 +42,7 @@ func backupFile(file string) (err error) {
 	defer inFile.Close()
 
 	// backup file
-	if bakFile, err = os.OpenFile(bakFilepath, os.O_CREATE|os.O_RDWR, fileMode); err != nil {
+	if bakFile, err = os.OpenFile(bakFilepath, os.O_CREATE|os.O_RDWR|os.O_TRUNC, fileMode); err != nil {
 		return
 	}
 	defer bakFile.Close()
